@@ -1,0 +1,192 @@
+settings.graddle
+--------------------------------------------------------
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven{ url "https://jitpack.io"}
+    }
+}
+
+rootProject.name = "Image Slider Nikhil"
+include ':app'
+
+
+
+
+
+
+build.graddle
+------------------------------------------------------
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.example.imageslidernikhil'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.example.imageslidernikhil"
+        minSdk 25
+        targetSdk 35
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    implementation ("com.github.denzcoskun:ImageSlideshow:0.1.0")
+}
+
+
+
+
+
+strings.xml
+------------------------------------------
+<resources>
+    <string name="app_name">Pet Shop</string>
+</resources>
+
+
+
+
+activity_main.xml
+---------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="16dp"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/appTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Image Slider App"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="100dp"/>
+
+    <com.denzcoskun.imageslider.ImageSlider
+        android:id="@+id/imageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_gravity="center_vertical"
+
+        android:layout_marginTop="0dp" />
+
+</LinearLayout>
+
+
+
+
+
+MainActivity.java
+---------------------------------------------------
+package com.example.imageslidernikhil;
+
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.denzcoskun.imageslider.ImageSlider;
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ImageSlider imageSlider = findViewById(R.id.imageSlider);
+
+        ArrayList<SlideModel> slideModels = new ArrayList<>();
+        slideModels.add(new SlideModel(R.drawable.one, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.two, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.three, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.four, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.five, ScaleTypes.FIT));
+        slideModels.add(new SlideModel(R.drawable.six, ScaleTypes.FIT));
+
+        imageSlider.setImageList(slideModels, ScaleTypes.FIT);
+        imageSlider.startSliding(3000); // auto slide every 3 seconds
+    }
+}
+
+
+
+
+AndroidManifest.xml(not necessary changes)
+--------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ImageSliderNikhil"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

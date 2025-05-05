@@ -1,0 +1,139 @@
+activity_main.xml(create raw file and add audio in raw file in res folder
+-----------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools ="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+    
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Media Player Demo"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/button_play"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Play"
+            android:onClick="music"/>
+
+        <Button
+            android:id="@+id/button_pause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Pause"
+            android:onClick="music"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/button_stop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Stop"
+            android:onClick="music"/>
+    </LinearLayout>
+
+</LinearLayout>
+
+
+
+
+
+
+MainActivity.java
+------------------------------------------------------
+package com.example.mediaplayer_nikhil;
+
+import android.media.MediaPlayer;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+    private MediaPlayer mediaPlayer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        Button play   = findViewById(R.id.button_play);
+        Button pause  = findViewById(R.id.button_pause);
+        Button stop   = findViewById(R.id.button_stop);
+
+        if (play == null || pause == null || stop == null) {
+            Toast.makeText(this, "Button IDs not found!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+        mediaPlayer = null;
+    }
+
+
+    public void music(View view) {
+        int id = view.getId();
+
+        if (id == R.id.button_play) {
+
+            if (mediaPlayer == null) {
+                mediaPlayer = MediaPlayer.create(this, R.raw.mp3);
+                mediaPlayer.setOnCompletionListener(mp -> stopMusic());
+            }
+            mediaPlayer.start();
+
+        } else if (id == R.id.button_pause) {
+
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                mediaPlayer.pause();
+            }
+
+        } else if (id == R.id.button_stop) {
+
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                stopMusic();
+            }
+        }
+    }
+
+
+    private void stopMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+            Toast.makeText(this, "Stopped and released player", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopMusic();
+    }
+}
